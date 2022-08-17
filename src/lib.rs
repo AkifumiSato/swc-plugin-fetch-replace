@@ -4,13 +4,20 @@ use swc_core::{
     testing_transform::test,
     visit::{as_folder, FoldWith, VisitMut},
 };
+use swc_core::ast::*;
+use swc_core::visit::VisitMutWith;
+use swc_core::common::Spanned;
 
 pub struct TransformVisitor;
 
 impl VisitMut for TransformVisitor {
-    // Implement necessary visit_mut_* methods for actual custom transform.
-    // A comprehensive list of possible visitor methods can be found here:
-    // https://rustdoc.swc.rs/swc_ecma_visit/trait.VisitMut.html
+    fn visit_mut_bin_expr(&mut self, e: &mut BinExpr) {
+        e.span.visit_mut_children_with(self);
+
+        if e.op == op!("===") {
+            e.left = Box::new(Ident::new("akfm".into(), e.left.span()).into());
+        }
+    }
 }
 
 /// An example plugin function with macro support.
@@ -34,7 +41,7 @@ pub fn process_transform(program: Program, _metadata: TransformPluginProgramMeta
 }
 
 // An example to test plugin transform.
-// Recommended streategy to test plugin's transform is verify
+// Recommended strategy to test plugin's transform is verify
 // the Visitor's behavior, instead of trying to run `process_transform` with mocks
 // unless explicitly required to do so.
 test!(
@@ -42,7 +49,15 @@ test!(
     |_| as_folder(TransformVisitor),
     boo,
     // Input codes
-    r#"console.log("transform");"#,
+    r#"
+if (a === b) {
+    console.log("transform");
+}
+"#,
     // Output codes after transformed with plugin
-    r#"console.log("transform");"#
+    r#"
+if (akfm === b) {
+    console.log("transform");
+}
+"#
 );

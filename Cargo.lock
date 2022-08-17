@@ -1458,7 +1458,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "swc_plugin_demo"
+name = "swc-plugin-fetch-mock"
 version = "0.1.0"
 dependencies = [
  "serde",

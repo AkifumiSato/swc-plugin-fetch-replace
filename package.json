@@ -1,11 +1,11 @@
 {
-    "name": "swc_plugin_demo",
+    "name": "swc-plugin-fetch-mock",
     "version": "0.1.0",
     "description": "",
     "author": "",
     "license": "ISC",
     "keywords": ["swc-plugin"],
-    "main": "target/wasm32-wasi/release/swc_plugin_demo.wasm",
+    "main": "target/wasm32-wasi/release/swc-plugin-fetch-mock.wasm",
     "scripts": {
         "prepublishOnly": "cargo build-wasi --release"
     },
