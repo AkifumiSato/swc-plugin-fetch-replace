@@ -40,24 +40,25 @@ pub fn process_transform(program: Program, _metadata: TransformPluginProgramMeta
     program.fold_with(&mut as_folder(TransformVisitor))
 }
 
-// An example to test plugin transform.
-// Recommended strategy to test plugin's transform is verify
-// the Visitor's behavior, instead of trying to run `process_transform` with mocks
-// unless explicitly required to do so.
-test!(
-    Default::default(),
-    |_| as_folder(TransformVisitor),
-    boo,
-    // Input codes
-    r#"
-if (a === b) {
-    console.log("transform");
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    test!(
+        Default::default(),
+        |_| as_folder(TransformVisitor),
+        boo,
+        // Input codes
+        r#"
+        if (a === b) {
+            console.log("transform");
+        }
+        "#,
+        // Output codes after transformed with plugin
+        r#"
+        if (akfm === b) {
+            console.log("transform");
+        }
+        "#
+    );
 }
-"#,
-    // Output codes after transformed with plugin
-    r#"
-if (akfm === b) {
-    console.log("transform");
-}
-"#
-);

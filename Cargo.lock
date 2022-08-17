@@ -1184,6 +1184,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "swc-plugin-fetch-mock"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "swc_core",
+]
+
+[[package]]
 name = "swc_atoms"
 version = "0.4.8"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1455,14 +1463,6 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "bab3653e7c1a88b697f5517205bd2e0c2c843a5f44b775f064160755a38a6b93"
 dependencies = [
  "once_cell",
-]
-
-[[package]]
-name = "swc-plugin-fetch-mock"
-version = "0.1.0"
-dependencies = [
- "serde",
- "swc_core",
 ]
 
 [[package]]
