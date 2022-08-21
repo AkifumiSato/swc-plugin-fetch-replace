@@ -12,6 +12,20 @@ impl VisitMut for TransformVisitor {
         callee.visit_mut_children_with(self);
 
         if let Callee::Expr(expr) = callee {
+            if let Expr::Member(parent) = &mut **expr {
+                // dbg!(parent.clone());
+
+                if let Expr::Ident(i) = &mut *parent.obj {
+                    if &*i.sym == "window" {
+                        if let MemberProp::Ident(i) = &mut parent.prop {
+                            if &*i.sym == "fetch" {
+                                i.sym = "my_fetch".into();
+                            }
+                        }
+                    }
+                }
+            }
+
             if let Expr::Ident(i) = &mut **expr {
                 if &*i.sym == "fetch" {
                     i.sym = "my_fetch".into();
@@ -57,6 +71,20 @@ mod tests {
         // Output codes after transformed with plugin
         r#"
         const res = await my_fetch('http://localhost:9999');
+        "#
+    );
+
+    test!(
+        Default::default(),
+        |_| as_folder(TransformVisitor),
+        widow_fetch,
+        // Input codes
+        r#"
+        const res = await window.fetch('http://localhost:9999');
+        "#,
+        // Output codes after transformed with plugin
+        r#"
+        const res = await window.my_fetch('http://localhost:9999');
         "#
     );
 
