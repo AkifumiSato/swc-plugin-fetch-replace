@@ -1,19 +1,22 @@
 use swc_core::{
     ast::Program,
+    ast::*,
     plugin::{plugin_transform, proxies::TransformPluginProgramMetadata},
     visit::{as_folder, FoldWith, VisitMut, VisitMutWith},
-    common::Spanned,
-    ast::*,
 };
 
 pub struct TransformVisitor;
 
 impl VisitMut for TransformVisitor {
-    fn visit_mut_bin_expr(&mut self, e: &mut BinExpr) {
-        e.span.visit_mut_children_with(self);
+    fn visit_mut_callee(&mut self, callee: &mut Callee) {
+        callee.visit_mut_children_with(self);
 
-        if e.op == op!("===") {
-            e.left = Box::new(Ident::new("akfm".into(), e.left.span()).into());
+        if let Callee::Expr(expr) = callee {
+            if let Expr::Ident(i) = &mut **expr {
+                if &*i.sym == "fetch" {
+                    i.sym = "my_fetch".into();
+                }
+            }
         }
     }
 }
@@ -46,18 +49,28 @@ mod tests {
     test!(
         Default::default(),
         |_| as_folder(TransformVisitor),
-        boo,
+        replace_fetch,
         // Input codes
         r#"
-        if (a === b) {
-            console.log("transform");
-        }
+        const res = await fetch('http://localhost:9999');
         "#,
         // Output codes after transformed with plugin
         r#"
-        if (akfm === b) {
-            console.log("transform");
-        }
+        const res = await my_fetch('http://localhost:9999');
+        "#
+    );
+
+    test!(
+        Default::default(),
+        |_| as_folder(TransformVisitor),
+        not_replace_fetch,
+        // Input codes
+        r#"
+        const res = await custom_fetch('http://localhost:9999');
+        "#,
+        // Output codes after transformed with plugin
+        r#"
+        const res = await custom_fetch('http://localhost:9999');
         "#
     );
 }
