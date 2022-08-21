@@ -1,12 +1,10 @@
 use swc_core::{
     ast::Program,
     plugin::{plugin_transform, proxies::TransformPluginProgramMetadata},
-    testing_transform::test,
-    visit::{as_folder, FoldWith, VisitMut},
+    visit::{as_folder, FoldWith, VisitMut, VisitMutWith},
+    common::Spanned,
+    ast::*,
 };
-use swc_core::ast::*;
-use swc_core::visit::VisitMutWith;
-use swc_core::common::Spanned;
 
 pub struct TransformVisitor;
 
@@ -43,6 +41,7 @@ pub fn process_transform(program: Program, _metadata: TransformPluginProgramMeta
 #[cfg(test)]
 mod tests {
     use super::*;
+    use swc_core::testing_transform::test;
 
     test!(
         Default::default(),
