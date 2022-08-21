@@ -16,7 +16,7 @@ impl VisitMut for TransformVisitor {
                 // dbg!(parent.clone());
 
                 if let Expr::Ident(i) = &mut *parent.obj {
-                    if &*i.sym == "window" {
+                    if &*i.sym == "window" || &*i.sym == "globalThis" {
                         if let MemberProp::Ident(i) = &mut parent.prop {
                             if &*i.sym == "fetch" {
                                 i.sym = "my_fetch".into();
@@ -71,6 +71,20 @@ mod tests {
         // Output codes after transformed with plugin
         r#"
         const res = await my_fetch('http://localhost:9999');
+        "#
+    );
+
+    test!(
+        Default::default(),
+        |_| as_folder(TransformVisitor),
+        global_this_fetch,
+        // Input codes
+        r#"
+        const res = await globalThis.fetch('http://localhost:9999');
+        "#,
+        // Output codes after transformed with plugin
+        r#"
+        const res = await globalThis.my_fetch('http://localhost:9999');
         "#
     );
 
