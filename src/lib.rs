@@ -1,3 +1,4 @@
+use serde::{Deserialize, Serialize};
 use swc_core::{
     ast::Program,
     ast::*,
@@ -5,7 +6,24 @@ use swc_core::{
     visit::{as_folder, FoldWith, VisitMut, VisitMutWith},
 };
 
-pub struct TransformVisitor;
+#[derive(Default, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
+#[serde(deny_unknown_fields)]
+pub struct Config {
+    /// Function name to replace
+    #[serde()]
+    pub replace_name: String,
+}
+
+pub struct TransformVisitor {
+    config: Config,
+}
+
+impl TransformVisitor {
+    pub fn new(config: Config) -> Self {
+        Self { config }
+    }
+}
 
 impl VisitMut for TransformVisitor {
     fn visit_mut_callee(&mut self, callee: &mut Callee) {
@@ -13,13 +31,12 @@ impl VisitMut for TransformVisitor {
 
         if let Callee::Expr(expr) = callee {
             if let Expr::Member(parent) = &mut **expr {
-                // dbg!(parent.clone());
-
                 if let Expr::Ident(i) = &mut *parent.obj {
                     if &*i.sym == "window" || &*i.sym == "globalThis" {
                         if let MemberProp::Ident(i) = &mut parent.prop {
                             if &*i.sym == "fetch" {
-                                i.sym = "my_fetch".into();
+                                let replace_name: &str = &self.config.replace_name;
+                                i.sym = replace_name.into();
                             }
                         }
                     }
@@ -28,7 +45,8 @@ impl VisitMut for TransformVisitor {
 
             if let Expr::Ident(i) = &mut **expr {
                 if &*i.sym == "fetch" {
-                    i.sym = "my_fetch".into();
+                    let replace_name: &str = &self.config.replace_name;
+                    i.sym = replace_name.into();
                 }
             }
         }
@@ -51,8 +69,15 @@ impl VisitMut for TransformVisitor {
 /// This requires manual handling of serialization / deserialization from ptrs.
 /// Refer swc_plugin_macro to see how does it work internally.
 #[plugin_transform]
-pub fn process_transform(program: Program, _metadata: TransformPluginProgramMetadata) -> Program {
-    program.fold_with(&mut as_folder(TransformVisitor))
+pub fn process_transform(program: Program, metadata: TransformPluginProgramMetadata) -> Program {
+    let config = serde_json::from_str::<Config>(
+        &metadata
+            .get_transform_plugin_config()
+            .expect("failed to parse plugin config"),
+    )
+    .expect("invalid plugin config");
+
+    program.fold_with(&mut as_folder(TransformVisitor::new(config)))
 }
 
 #[cfg(test)]
@@ -60,9 +85,16 @@ mod tests {
     use super::*;
     use swc_core::testing_transform::test;
 
+    fn test_visiter() -> TransformVisitor {
+        let config = Config {
+            replace_name: String::from("my_test_fetch"),
+        };
+        TransformVisitor { config }
+    }
+
     test!(
         Default::default(),
-        |_| as_folder(TransformVisitor),
+        |_| as_folder(test_visiter()),
         replace_fetch,
         // Input codes
         r#"
@@ -70,13 +102,13 @@ mod tests {
         "#,
         // Output codes after transformed with plugin
         r#"
-        const res = await my_fetch('http://localhost:9999');
+        const res = await my_test_fetch('http://localhost:9999');
         "#
     );
 
     test!(
         Default::default(),
-        |_| as_folder(TransformVisitor),
+        |_| as_folder(test_visiter()),
         global_this_fetch,
         // Input codes
         r#"
@@ -84,13 +116,13 @@ mod tests {
         "#,
         // Output codes after transformed with plugin
         r#"
-        const res = await globalThis.my_fetch('http://localhost:9999');
+        const res = await globalThis.my_test_fetch('http://localhost:9999');
         "#
     );
 
     test!(
         Default::default(),
-        |_| as_folder(TransformVisitor),
+        |_| as_folder(test_visiter()),
         widow_fetch,
         // Input codes
         r#"
@@ -98,13 +130,13 @@ mod tests {
         "#,
         // Output codes after transformed with plugin
         r#"
-        const res = await window.my_fetch('http://localhost:9999');
+        const res = await window.my_test_fetch('http://localhost:9999');
         "#
     );
 
     test!(
         Default::default(),
-        |_| as_folder(TransformVisitor),
+        |_| as_folder(test_visiter()),
         not_replace_fetch,
         // Input codes
         r#"
