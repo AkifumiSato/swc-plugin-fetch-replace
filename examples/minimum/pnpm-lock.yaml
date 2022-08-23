@@ -3,12 +3,12 @@ lockfileVersion: 5.4
 specifiers:
   '@swc/cli': ^0.1.57
   '@swc/core': ^1.2.241
-  swc-plugin-fetch-replacer: ^0.1.0
+  swc-plugin-fetch-replace: ^0.1.0
 
 devDependencies:
   '@swc/cli': 0.1.57_@swc+core@1.2.241
   '@swc/core': 1.2.241
-  swc-plugin-fetch-replacer: 0.1.0
+  swc-plugin-fetch-replace: 0.1.1
 
 packages:
 
@@ -316,8 +316,8 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
-  /swc-plugin-fetch-replacer/0.1.0:
-    resolution: {integrity: sha512-JHsEVZpHAjPci1A9BwovXt/OdJztUnw2dvY/JOmGsz05ovRszeUfPjbqLnKnntzOUf+BocnGJy9ZmeWAp2yeNA==}
+  /swc-plugin-fetch-replace/0.1.1:
+    resolution: {integrity: sha512-pzFsKxkmR+C/Dv+VoO7/KsMzKKQ5xBYXrNNLMMXHcEHXXy/xNavkcX8XwNwM9PlYcYPzwnIjIwYwLNHEOFeC+A==}
     dev: true
 
   /to-regex-range/5.0.1:
