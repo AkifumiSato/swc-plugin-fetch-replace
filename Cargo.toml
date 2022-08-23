@@ -1,5 +1,5 @@
 [package]
-name = "swc-plugin-fetch-replacer"
+name = "swc-plugin-fetch-replace"
 version = "0.1.0"
 edition = "2021"
 

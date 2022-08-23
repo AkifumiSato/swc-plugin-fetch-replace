@@ -13,6 +13,6 @@
   "devDependencies": {
     "@swc/cli": "^0.1.57",
     "@swc/core": "^1.2.241",
-    "swc-plugin-fetch-replacer": "^0.1.0"
+    "swc-plugin-fetch-replace": "^0.1.0"
   }
 }

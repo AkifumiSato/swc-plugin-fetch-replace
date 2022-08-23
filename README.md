@@ -1,13 +1,13 @@
-# swc-plugin-fetch-replacer
+# swc-plugin-fetch-replace
 
-[![npm version](https://badge.fury.io/js/swc-plugin-fetch-replacer.svg)](https://badge.fury.io/js/swc-plugin-fetch-replacer)
+[![npm version](https://badge.fury.io/js/swc-plugin-fetch-replace.svg)](https://badge.fury.io/js/swc-plugin-fetch-replace)
 
 SWC plugin for replaces global `fetch` with an arbitrary function.
 
 ## Install
 
 ```
-$ pnpm add -D swc-plugin-fetch-replacer
+$ pnpm add -D swc-plugin-fetch-replace
 ```
 
 ## Configuration
@@ -21,7 +21,7 @@ _.swcrc_
     "experimental": {
       "plugins": [
         [
-          "swc-plugin-fetch-replacer",
+          "swc-plugin-fetch-replace",
           {
             "replaceName": "replace_fetch"
           }

@@ -3,7 +3,7 @@
     "experimental": {
       "plugins": [
         [
-          "swc-plugin-fetch-replacer",
+          "swc-plugin-fetch-replace",
           {
             "replaceName": "replace_fetch"
           }
