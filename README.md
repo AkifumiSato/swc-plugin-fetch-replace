@@ -1,6 +1,6 @@
 # swc-plugin-fetch-replacer
 
-This plugin replaces global `fetch` with an arbitrary function.
+SWC plugin for replaces global `fetch` with an arbitrary function.
 
 ## todo
 

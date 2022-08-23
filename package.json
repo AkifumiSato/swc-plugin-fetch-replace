@@ -1,13 +1,13 @@
 {
     "name": "swc-plugin-fetch-replacer",
     "version": "0.1.0",
-    "description": "",
-    "author": "",
-    "license": "ISC",
+    "description": "SWC plugin for replaces global `fetch` with an arbitrary function.",
+    "author": "akfm.sato@gmail.com",
+    "license": "MIT",
     "keywords": ["swc-plugin"],
-    "main": "target/wasm32-wasi/release/swc-plugin-fetch-replacer.wasm",
+    "main": "swc-plugin-fetch-replacer.wasm",
     "scripts": {
-        "prepublishOnly": "cargo build-wasi --release"
+        "prepack": "cargo build-wasi --release && cp target/wasm32-wasi/release/your_plugin_name.wasm ."
     },
-    "files": []
+    "files": ["swc-plugin-fetch-replacer.wasm"]
 }
