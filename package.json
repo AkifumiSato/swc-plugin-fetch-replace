@@ -1,6 +1,6 @@
 {
     "name": "swc-plugin-fetch-replace",
-    "version": "0.1.0",
+    "version": "0.1.1",
     "description": "SWC plugin for replaces global `fetch` with an arbitrary function.",
     "author": "akfm.sato@gmail.com",
     "license": "MIT",
