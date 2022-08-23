@@ -6,4 +6,6 @@ SWC plugin for replaces global `fetch` with an arbitrary function.
 
 ## todo
 
-- [ ] add examples
+- [x] add examples
+- [ ] add jest examples
+- [ ] summarize in an article
