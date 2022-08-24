@@ -1,0 +1,14 @@
+{
+  "jsc": {
+    "experimental": {
+      "plugins": [
+        [
+          "swc-plugin-fetch-replace",
+          {
+            "replaceName": "replace_fetch"
+          }
+        ]
+      ]
+    }
+  }
+}
