@@ -1,0 +1,22 @@
+{
+  "name": "jest",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "swc index.ts -o output.js",
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@swc/cli": "0.1.57",
+    "@swc/core": "1.2.241",
+    "@swc/jest": "^0.2.22",
+    "@types/jest": "^28.1.8",
+    "jest": "^28.1.3",
+    "swc-plugin-fetch-replace": "^0.1.0",
+    "typescript": "^4.7.4"
+  }
+}
